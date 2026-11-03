@@ -24,7 +24,7 @@ function renderProject(project) {
     if (url) link.href = url
     else link.removeAttribute('href')
     link.classList.toggle('disabled', !url)
-    link.title = url ? '始终下载 GitHub 最新 Release' : '上传 GitHub 前，请先配置 release.config.json'
+    link.title = url ? '始终下载 GitHub 最新 Release' : '该平台暂未提供发行版'
   }
   $('#release-status').textContent = `当前 v${project.version} · 配置仅保存在本机`
   $('#check-update').disabled = !project.configured

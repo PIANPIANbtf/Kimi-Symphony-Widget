@@ -1,6 +1,6 @@
 # Kimi 星律挂件 · Kimi Symphony Widget
 
-一个独立的 Kimi 娘桌面挂件，支持 Windows x64 和 macOS（Intel / Apple Silicon 通用包）。显示 Kimi 官方订阅套餐用量，提供 Kimi、Kimi Code、自定义应用与网址入口，并根据任务状态切换常态、工作和完成形象。
+一个独立的 Kimi 娘桌面挂件，当前发布 Windows x64 便携版，macOS 版本暂缓。显示 Kimi 官方订阅套餐用量，提供 Kimi、Kimi Code、自定义应用与网址入口，并根据任务状态切换常态、工作和完成形象。
 
 ## 功能
 
@@ -13,18 +13,13 @@
 
 ## 安装
 
-发布后的下载地址统一使用 GitHub 最新 Release，不会因版本号变化而失效：
+Windows 下载地址统一使用 GitHub 最新 Release，不会因版本号变化而失效：
 
-- Windows：`https://github.com/PIANPIANbtf/Kimi-Symphony-Widget/releases/latest/download/Kimi-Symphony-Widget-Windows-x64.exe`
-- macOS：`https://github.com/PIANPIANbtf/Kimi-Symphony-Widget/releases/latest/download/Kimi-Symphony-Widget-macOS-Universal.zip`
-
-### Windows x64
+`https://github.com/PIANPIANbtf/Kimi-Symphony-Widget/releases/latest/download/Kimi-Symphony-Widget-Windows-x64.exe`
 
 下载后直接运行 exe，无需安装 Node.js。这是便携版，配置不会写入程序目录。项目未购买代码签名证书，首次运行时 Windows SmartScreen 可能提示确认，请只从项目 Release 下载。
 
-### macOS 通用版
-
-解压 zip，将 `Kimi Symphony Widget.app` 移到“应用程序”或个人有写权限的目录后打开。未签名应用首次可能需要右键选择“打开”。macOS 构建和一键更新只能在 macOS 上实际运行与验证。
+macOS 暂未发布，网站不会提供无效的 Mac 下载链接。
 
 ## 个人配置如何同步到挂件
 
@@ -47,8 +42,8 @@ http://127.0.0.1:45739/config
 配置网站公告板提供“检查更新”和“一键更新”：
 
 1. 从项目 GitHub 最新 Release 获取版本信息。
-2. 下载当前系统对应的固定文件名安装包。
-3. 使用 `latest.yml` 或 `latest-mac.yml` 中的 SHA-512 校验文件。
+2. 下载 Windows x64 便携安装包。
+3. 使用 `latest.yml` 中的 SHA-512 校验文件。
 4. 关闭旧挂件、保留旧版本备份、替换程序并重新启动。
 
 一键更新仅对打包后的发行版开放，开发模式不会覆盖 Electron 或 Node.js。公告中的 `releases/latest` 地址始终指向最新版，发布新版本时无需修改链接。
@@ -74,43 +69,27 @@ npm.cmd start
 npm run studio       # 单独启动配置网站
 npm run check        # JavaScript 语法检查
 npm run dist:win     # Windows x64 便携 exe
-npm run dist:mac     # macOS Universal zip，需在 macOS 执行
 ```
 
-Windows 构建产物位于 `release/`。项目包含 macOS 配置，但 Windows 主机不能替代 macOS 做最终构建和运行验证；GitHub Actions 会使用真实 macOS  runner 构建。
+Windows 构建产物位于 `release/`。GitHub Actions 当前只运行 Windows 构建；macOS 配置保留在项目中，但暂不构建或发布。
 
 ## 发布到 GitHub
 
-项目仓库已在 `release.config.json` 中配置为 `PIANPIANbtf/Kimi-Symphony-Widget`。如果以后迁移仓库，只需修改这一处；留空时，网站会禁用下载和更新按钮，避免生成无效链接。
+项目仓库已在 `release.config.json` 中配置为 `PIANPIANbtf/Kimi-Symphony-Widget`。如果以后迁移仓库，只需修改这一处。
 
-首次上传时，在项目目录执行以下命令。`git reset --mixed origin/main` 只把远程初始提交接入本地历史，不会覆盖当前工作目录中的文件：
+发布当前 `v1.0.1`：
 
 ```bash
-git init -b main
-git remote add origin https://github.com/PIANPIANbtf/Kimi-Symphony-Widget.git
-git fetch origin
-git reset --mixed origin/main
 git add .
-git commit -m "feat: Kimi 星律挂件首个发行版"
-git push -u origin main
-git tag v1.0.0
-git push origin v1.0.0
-```
-
-标签推送后，在 GitHub 的 Actions 页面等待两个构建任务完成，再到 Releases 检查 Windows exe、macOS zip 和两个更新校验文件。
-
-以后发布新版时，更新 `package.json` 版本号并创建对应标签：
-
-```bash
-npm version 1.0.1 --no-git-tag-version
-git add package.json package-lock.json release.config.json
 git commit -m "release: v1.0.1"
-git tag v1.0.1
 git push origin main
+git tag v1.0.1
 git push origin v1.0.1
 ```
 
-`.github/workflows/release.yml` 会分别在 Windows 和 macOS runner 上构建，并将 exe、zip 及更新校验文件上传到同一个 Release。不要删除 `latest.yml` 或 `latest-mac.yml`，一键更新需要它们。
+标签推送后，在 GitHub 的 Actions 页面等待 Windows 构建和 Release 任务完成，再到 Releases 检查 Windows exe 与 `latest.yml`。不要删除 `latest.yml`，一键更新需要它。
+
+以后发布新版时，先运行 `npm version <新版本> --no-git-tag-version`，再提交、推送并创建同名标签。
 
 ## 项目结构
 
