@@ -1,0 +1,9 @@
+node_modules/
+dist/
+release/
+修改意见.assets/
+*.log
+.DS_Store
+.env
+.env.*
+!.env.example

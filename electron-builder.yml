@@ -1,0 +1,36 @@
+appId: com.kimi.symphony.widget
+productName: Kimi Symphony Widget
+executableName: KimiSymphonyWidget
+asar: true
+directories:
+  output: release
+files:
+  - main.cjs
+  - preload.cjs
+  - server.mjs
+  - package.json
+  - release.config.json
+  - renderer/**
+  - config/**
+  - designs/**
+  - lib/**
+  - assets/**
+  - NOTICE
+  - LICENSE
+win:
+  icon: assets/kimi-nyan.png
+  artifactName: Kimi-Symphony-Widget-Windows-x64.${ext}
+  target:
+    - target: portable
+      arch: [x64]
+portable:
+  requestExecutionLevel: user
+mac:
+  icon: assets/kimi-nyan.png
+  category: public.app-category.utilities
+  artifactName: Kimi-Symphony-Widget-macOS-Universal.${ext}
+  identity: null
+  target:
+    - target: zip
+      arch: [universal]
+compression: normal

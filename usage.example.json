@@ -1,0 +1,13 @@
+{
+  "planName": "Kimi Plus",
+  "windows": {
+    "fiveHour": {
+      "remainingPercent": 68,
+      "resetsAt": null
+    },
+    "monthly": {
+      "remainingPercent": 82,
+      "resetsAt": null
+    }
+  }
+}

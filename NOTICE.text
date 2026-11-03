@@ -1,0 +1,19 @@
+Kimi Symphony Widget 素材来源
+
+assets/kimi-nyan.png 原样使用 pigeon189/zcode-fox-widget 项目的 assets/kimi.png。
+源项目将该角色立绘标注为项目自有素材，并以 MIT License 提供。
+Copyright (c) 2026 pigeon189 (ZCode Fox Widget / zcode-fox-widget)
+来源：https://github.com/pigeon189/zcode-fox-widget
+素材说明：https://github.com/pigeon189/zcode-fox-widget/blob/main/NOTICE
+
+assets/sounds/chime/press.wav 与 release.wav 为偏翩本人创作的 Kimi 风铃音效。
+音效由项目作者提供并确认其创作权利，未使用参考项目的音频采样。
+参考项目 NieRMHY/dsh-whale-widget 仅用于交互灵感，其音频未包含在本发行版中。
+参考项目：https://github.com/NieRMHY/dsh-whale-widget
+
+assets/kimi娘_工作进行中.png、assets/kimi娘_工作完成.png 由项目作者偏翩本人创作。
+这两张图片不是上述参考项目的原带文件，作者确认其拥有相应创作权利。
+
+assets/nebula/ 中的星空、月牙和棱镜 SVG 为本项目绘制的界面素材。
+
+项目不隶属于 Moonshot AI。Kimi、Kimi Code 名称及相关权利归其各自所有者所有。
