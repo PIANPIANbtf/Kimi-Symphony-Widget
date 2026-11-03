@@ -77,14 +77,14 @@ Windows 构建产物位于 `release/`。GitHub Actions 当前只运行 Windows �
 
 项目仓库已在 `release.config.json` 中配置为 `PIANPIANbtf/Kimi-Symphony-Widget`。如果以后迁移仓库，只需修改这一处。
 
-发布当前 `v1.0.1`：
+发布当前 `v1.0.2`：
 
 ```bash
 git add .
-git commit -m "release: v1.0.1"
+git commit -m "release: v1.0.2"
 git push origin main
-git tag v1.0.1
-git push origin v1.0.1
+git tag v1.0.2
+git push origin v1.0.2
 ```
 
 标签推送后，在 GitHub 的 Actions 页面等待 Windows 构建和 Release 任务完成，再到 Releases 检查 Windows exe 与 `latest.yml`。不要删除 `latest.yml`，一键更新需要它。
