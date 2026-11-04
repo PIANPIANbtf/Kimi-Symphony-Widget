@@ -195,7 +195,7 @@ $('#general-form').addEventListener('submit', event => {
     soundVolume: Number($('#sound-volume').value),
     alwaysOnTop: $('#always-on-top').checked,
     autoStart: $('#auto-start').checked,
-  }), '基础设置已保存，挂件将自动同步')
+  }), '配置已保存，请在挂件中点击立即同步')
 })
 $('#mascot-file').addEventListener('change', event => {
   $('#mascot-file-name').textContent = event.target.files[0]?.name || '尚未选择文件'

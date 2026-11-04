@@ -5,6 +5,7 @@ release/
 *.log
 .DS_Store
 .wrangler/
+.cloudbase/
 .dev.vars
 .env
 .env.*

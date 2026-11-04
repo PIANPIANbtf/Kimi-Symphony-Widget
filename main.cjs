@@ -27,7 +27,6 @@ let startupModule
 let customAssetsModule
 let pathsModule
 let cloudSyncModule
-let cloudTimer = null
 let configWatcher = null
 let configTimer = null
 let mascotCenterY = null
@@ -187,7 +186,6 @@ async function createWindow() {
   mainWindow.loadFile(path.join(__dirname, 'renderer', 'index.html'))
   mainWindow.on('closed', () => {
     clearTimeout(configTimer)
-    clearInterval(cloudTimer)
     configWatcher?.close()
     configWatcher = null
     taskMonitor?.stop()
@@ -202,9 +200,6 @@ async function createWindow() {
   })
   await taskMonitor.start()
   watchConfig()
-  cloudTimer = setInterval(() => synchronizeCloud().catch(() => {}), 15000)
-  cloudTimer.unref()
-  synchronizeCloud().catch(() => {})
 }
 
 app.whenReady().then(createWindow)

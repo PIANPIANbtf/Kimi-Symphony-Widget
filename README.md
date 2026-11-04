@@ -26,10 +26,10 @@ macOS 暂未发布，网站不会提供无效的 Mac 下载链接。
 打开公共配置中心并注册或登录：
 
 ```text
-https://app.kimi-symphony.workers.dev/config
+https://kimi-symphony-d3gbac9jxfdeab165-1525197159.ap-shanghai.app.tcloudbase.com/config
 ```
 
-网站将文字设置、应用入口和自定义素材保存到当前账号。桌面挂件在设置中登录同一账号后，每 15 秒自动同步，也可点击“立即同步”。挂件只保存随机会话令牌，不保存账号密码；窗口位置、弹窗开关、置顶和开机自启仍按设备分别保留。
+网站将文字设置、应用入口和自定义素材保存到当前账号。挂件在首次登录时迁移本机配置，之后只在用户点击“立即同步”时下载云端更新，不进行定时或启动自动同步。挂件只保存随机会话令牌，不保存账号密码；窗口位置、弹窗开关、置顶和开机自启仍按设备分别保留。
 
 账号密码使用加盐 PBKDF2 哈希，网站会话使用 HttpOnly、Secure、SameSite Cookie。自定义素材按账号隔离并分块存储。Kimi 官方凭据始终只在本机用于官方用量接口，不会上传到账号、公告或 Release。
 
@@ -87,13 +87,26 @@ git push origin v1.1.0
 
 以后发布新版时，先运行 `npm version <新版本> --no-git-tag-version`，再提交、推送并创建同名标签。
 
-## Cloudflare 公共网站
+## CloudBase 公共网站（当前）
 
-公共地址：https://app.kimi-symphony.workers.dev
+公共地址：https://kimi-symphony-d3gbac9jxfdeab165-1525197159.ap-shanghai.app.tcloudbase.com
 
-公共门户位于 `cloudflare/`，提供账号注册登录、个性化配置、公告、下载、版本检查和素材说明。个人配置按账号隔离并同步到挂件，Kimi 官方凭据不会上传。
+当前国内环境位于 `cloudbase/`，使用 CloudBase 云函数、PostgreSQL 和分块素材存储，提供账号注册登录、个性化配置、公告、下载、版本检查和素材说明。挂件只在首次登录和手动点击“立即同步”时更新，Kimi 官方凭据不会上传。
 
-Worker 改名后需重新执行一次 `npx.cmd wrangler secret put ANNOUNCEMENT_KEY`，Cloudflare 不会自动复制 Secret。
+重新部署函数：
+
+```powershell
+npx.cmd tcb login
+npm.cmd run cloudbase:deploy
+```
+
+免费版每月包含 3,000 资源点，每 6 个月需要续期。Kimi 官方用量查询不经过 CloudBase。
+
+默认 `tcloudbase.com` 域名仅供开发测试，首次访问可能显示平台风险提示。正式向大量用户分发前，必须配置已完成 ICP 备案的自定义域名，否则平台可能因流量触发风控。
+
+## Cloudflare 备用网站
+
+备用门户位于 `cloudflare/`。Worker 改名后需重新执行一次 `npx.cmd wrangler secret put ANNOUNCEMENT_KEY`，Cloudflare 不会自动复制 Secret。
 
 首次部署时，在项目目录完成一次 Cloudflare 授权并设置公告密钥：
 
