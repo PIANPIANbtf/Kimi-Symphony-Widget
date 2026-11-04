@@ -1,5 +1,6 @@
 # Kimi 星律挂件 · Kimi Symphony Widget
 
+个性化网站地址https://app.kimi-symphony.workers.dev/
 一个独立的 Kimi 娘桌面挂件，当前发布 Windows x64 便携版，macOS 版本暂缓。显示 Kimi 官方订阅套餐用量，提供 Kimi、Kimi Code、自定义应用与网址入口，并根据任务状态切换常态、工作和完成形象。
 
 ## 功能
