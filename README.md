@@ -7,7 +7,7 @@
 - 每 60 秒读取官方订阅用量，同步失败时保留最近一次成功数据。
 - 常态、工作、完成三种形象与文案，支持多任务计数。
 - 拖动、贴边、置顶、开机自启、大小调整和点击音效。
-- 本机配置网站：自定义三种形象、随机文案、气泡版式、应用入口、插件和音效。
+- 公共账号配置中心：自定义三种形象、随机文案、气泡版式、应用入口、插件和音效，并同步到登录的挂件。
 - 配置网站公告板提供参考项目、素材出处、最新安装包和更新入口。
 - 发行版支持检查更新与一键更新；更新包通过 Release 中的 SHA-512 校验后才替换程序。
 
@@ -23,19 +23,15 @@ macOS 暂未发布，网站不会提供无效的 Mac 下载链接。
 
 ## 个人配置如何同步到挂件
 
-启动挂件后，应用会自动在本机启动配置网站：
+打开公共配置中心并注册或登录：
 
 ```text
-http://127.0.0.1:45739/config
+https://app.kimi-symphony.workers.dev/config
 ```
 
-网站和挂件读取同一份本机配置，保存后立即同步。自定义图片和 MP3 也保存在本机。每个 Windows／macOS 用户有独立的数据目录：
+网站将文字设置、应用入口和自定义素材保存到当前账号。桌面挂件在设置中登录同一账号后，每 15 秒自动同步，也可点击“立即同步”。挂件只保存随机会话令牌，不保存账号密码；窗口位置、弹窗开关、置顶和开机自启仍按设备分别保留。
 
-```text
-~/.kimi-symphony-widget/
-```
-
-该服务只监听 `127.0.0.1`，不需要账号，也不会把配置或 Kimi 凭据上传到公共服务器。它不是多设备云同步；更换设备时可在关闭挂件后备份该目录。套餐用量使用本机 Kimi Code 凭据访问官方接口，凭据不会进入网站、日志或 Release。
+账号密码使用加盐 PBKDF2 哈希，网站会话使用 HttpOnly、Secure、SameSite Cookie。自定义素材按账号隔离并分块存储。Kimi 官方凭据始终只在本机用于官方用量接口，不会上传到账号、公告或 Release。
 
 ## 更新
 
@@ -77,19 +73,45 @@ Windows 构建产物位于 `release/`。GitHub Actions 当前只运行 Windows �
 
 项目仓库已在 `release.config.json` 中配置为 `PIANPIANbtf/Kimi-Symphony-Widget`。如果以后迁移仓库，只需修改这一处。
 
-发布当前 `v1.0.2`：
+发布当前 `v1.1.0`：
 
 ```bash
 git add .
-git commit -m "release: v1.0.2"
+git commit -m "release: v1.1.0"
 git push origin main
-git tag v1.0.2
-git push origin v1.0.2
+git tag v1.1.0
+git push origin v1.1.0
 ```
 
 标签推送后，在 GitHub 的 Actions 页面等待 Windows 构建和 Release 任务完成，再到 Releases 检查 Windows exe 与 `latest.yml`。不要删除 `latest.yml`，一键更新需要它。
 
 以后发布新版时，先运行 `npm version <新版本> --no-git-tag-version`，再提交、推送并创建同名标签。
+
+## Cloudflare 公共网站
+
+公共地址：https://app.kimi-symphony.workers.dev
+
+公共门户位于 `cloudflare/`，提供账号注册登录、个性化配置、公告、下载、版本检查和素材说明。个人配置按账号隔离并同步到挂件，Kimi 官方凭据不会上传。
+
+Worker 改名后需重新执行一次 `npx.cmd wrangler secret put ANNOUNCEMENT_KEY`，Cloudflare 不会自动复制 Secret。
+
+首次部署时，在项目目录完成一次 Cloudflare 授权并设置公告密钥：
+
+```powershell
+npx.cmd wrangler login
+npx.cmd wrangler secret put ANNOUNCEMENT_KEY
+npm.cmd run web:deploy
+```
+
+`wrangler login` 会打开 Cloudflare 授权页面；`secret put` 会在终端中要求输入公告密钥，密钥不会写入仓库。以后修改公告时输入同一密钥。
+
+部署成功后，Wrangler 会输出 `workers.dev` 公网地址。可访问 `/api/health` 检查状态。更新公共网站只需再次运行 `npm.cmd run web:deploy`。
+
+本地预览：
+
+```powershell
+npm.cmd run web:dev
+```
 
 ## 项目结构
 

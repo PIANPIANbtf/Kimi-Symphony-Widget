@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Kimi 星律挂件公共主页：Windows 下载、更新、公告与素材说明。">
+  <title>Kimi 星律挂件</title>
+  <link rel="icon" type="image/png" href="/kimi-nyan.png">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="hero">
+    <img src="/kimi-nyan.png" alt="Kimi 星律挂件图标" width="112" height="112">
+    <div>
+      <span class="eyebrow">KIMI SYMPHONY WIDGET</span>
+      <h1>Kimi 星律挂件</h1>
+      <p>让 Kimi 娘陪伴你的每一次思考。</p>
+    </div>
+    <span id="version" class="version">读取版本中</span>
+  </header>
+
+  <main>
+    <section class="download-card">
+      <div><span class="eyebrow">WINDOWS X64 · PORTABLE</span><h2>下载桌面挂件</h2><p>免安装，无需 Node.js。配置仅保存在你的电脑。</p></div>
+      <div class="actions">
+        <a id="download-windows" class="primary">下载 Windows 最新版</a>
+        <button id="check-update" class="secondary">检查版本</button>
+        <a id="release-page" class="secondary" target="_blank" rel="noopener">Release 页面</a>
+      </div>
+      <p id="release-status" class="status">正在读取发布信息...</p>
+    </section>
+
+    <section class="announcement-card">
+      <div class="section-title"><h2>公告板</h2><small id="announcement-time">所有人都可以阅读</small></div>
+      <p id="announcement-text">正在读取公告...</p>
+      <details>
+        <summary>编辑公共公告</summary>
+        <textarea id="announcement-input" rows="4" maxlength="2000"></textarea>
+        <div class="editor-actions"><input id="announcement-key" type="password" placeholder="公告编辑密钥" autocomplete="off"><button id="save-announcement" class="primary">保存公告</button></div>
+      </details>
+    </section>
+
+    <section class="config-card">
+      <span class="eyebrow">PERSONALIZATION</span>
+      <h2>登录你的公共账号</h2>
+      <p>个性化配置按账号隔离，并同步到登录的桌面挂件。Kimi 官方凭据始终不会上传。</p>
+      <a class="secondary" href="/config">注册或登录并个性化</a>
+    </section>
+
+    <section class="links-card">
+      <h2>项目与素材</h2>
+      <div id="project-links" class="project-links"></div>
+    </section>
+  </main>
+
+  <footer>Kimi 星律挂件 · 非 Moonshot AI 官方项目 · <a id="source-link" target="_blank" rel="noopener">GitHub 开源仓库</a></footer>
+  <div id="toast" role="status"></div>
+  <script src="/app.js"></script>
+</body>
+</html>

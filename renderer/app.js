@@ -123,7 +123,17 @@ function playSound(kind) {
   return audio.play().then(() => true).catch(() => false)
 }
 
+function renderCloudStatus() {
+  const cloud = state.cloud || { loggedIn: false }
+  $('#cloud-status').textContent = cloud.loggedIn
+    ? `已登录 ${cloud.user?.username || ''} · ${cloud.lastError || (cloud.lastSync ? `同步于 ${new Date(cloud.lastSync).toLocaleTimeString('zh-CN')}` : '等待同步')}`
+    : cloud.lastError || '尚未登录公共账号'
+  $('#cloud-logout').hidden = !cloud.loggedIn
+  $('#cloud-sync').hidden = !cloud.loggedIn
+}
+
 function applySettings() {
+  renderCloudStatus()
   const settings = state.settings
   document.documentElement.style.setProperty('--scale', settings.scale)
   elements.bubble.dataset.theme = settings.bubbleTheme
@@ -522,6 +532,34 @@ $('#official-button').addEventListener('click', () => {
   if (desktop) desktop.openStudio()
   else window.open('/config', '_blank', 'noopener')
 })
+$('#cloud-login').addEventListener('click', async () => {
+  if (!desktop) return
+  const username = $('#cloud-username').value.trim()
+  const password = $('#cloud-password').value
+  if (!username || !password) {
+    $('#cloud-status').textContent = '请输入公共账号用户名和密码'
+    return
+  }
+  $('#cloud-status').textContent = '正在登录并同步...'
+  try {
+    state.cloud = await desktop.cloudLogin({ username, password })
+    $('#cloud-password').value = ''
+    await loadState()
+  } catch (error) {
+    $('#cloud-status').textContent = error.message
+  }
+})
+$('#cloud-sync').addEventListener('click', async () => {
+  if (!desktop) return
+  $('#cloud-status').textContent = '正在同步...'
+  state.cloud = await desktop.cloudSync()
+  await loadState()
+})
+$('#cloud-logout').addEventListener('click', async () => {
+  if (!desktop) return
+  state.cloud = await desktop.cloudLogout()
+  renderCloudStatus()
+})
 
 async function openApplication(id) {
   if (!desktop) {
@@ -560,6 +598,10 @@ if (desktop) {
     if (Date.now() - lastLocalUpdate > 600) loadState().catch(() => {})
   })
   desktop.onTaskStateChanged((snapshot) => applyTaskState(snapshot))
+  desktop.onCloudStatus((status) => {
+    state.cloud = status
+    renderCloudStatus()
+  })
 }
 
 if (!desktop) setInterval(async () => {

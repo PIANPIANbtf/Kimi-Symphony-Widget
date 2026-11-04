@@ -46,6 +46,7 @@ body.web #widget { right: 18px; bottom: 12px; }
 
 .card-header { position: relative; display: flex; align-items: center; gap: 10px; z-index: 1; }
 .brand-mark { display: grid; place-items: center; width: 35px; height: 35px; flex: 0 0 auto; border-radius: 12px 12px 12px 4px; color: #fff; font: 700 18px Georgia, serif; background: linear-gradient(145deg, #8698eb, #4d4b9c); box-shadow: 0 4px 12px rgba(93,100,190,.25); }
+.brand-mark img { width: 100%; height: 100%; object-fit: cover; border-radius: inherit; }
 .heading { min-width: 0; flex: 1; }
 .heading p, .heading h1 { margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .heading p { color: #8c96b8; font-size: 9px; font-weight: 700; letter-spacing: .11em; text-transform: uppercase; }
@@ -157,6 +158,12 @@ body.web #widget { right: 18px; bottom: 12px; }
 .settings-help { margin: 13px 0; color: #7884a6; font-size: 11px; line-height: 1.65; }
 .settings-help code { padding: 1px 4px; color: #5866af; background: #e9edfa; border-radius: 4px; }
 #usage-form { display: grid; gap: 11px; }
+.cloud-settings { display: grid; gap: 7px; padding: 10px; background: #f0f3fc; border: 1px solid #dfe5f5; border-radius: 10px; }
+#cloud-status { color: #6674a3; font-size: 10px; line-height: 1.5; }
+.cloud-settings input { width: 100%; height: 30px; padding: 5px 8px; color: #38436e; background: #fff; border: 1px solid #d8dff3; border-radius: 7px; outline: none; font-size: 10px; }
+.cloud-actions { display: flex; align-items: center; gap: 6px; }
+.cloud-actions button { min-height: 27px; padding: 4px 8px; border-radius: 7px; cursor: pointer; font-size: 9px; }
+.cloud-actions .text-button { margin-left: auto; }
 #usage-form label { display: grid; gap: 5px; color: #626e94; font-size: 10px; }
 #usage-form input[type="text"], #usage-form input:not([type]) { width: 100%; }
 #plan-input, .percent-grid input { width: 100%; height: 32px; padding: 6px 9px; color: #38436e; background: #fff; border: 1px solid #d8dff3; border-radius: 8px; outline: none; }

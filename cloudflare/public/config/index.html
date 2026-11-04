@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kimi 星律挂件 · Studio</title>
+  <link rel="icon" type="image/png" href="/assets/kimi-nyan.png">
+  <link rel="stylesheet" href="/config/styles.css">
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="/config"><span class="brand-mark"><img src="/assets/kimi-nyan.png" alt=""></span><span><strong>Kimi Symphony</strong><small>STUDIO</small></span></a>
+    <nav>
+      <a href="#general">基础设置</a>
+      <a href="#mascot">形象自定义</a>
+      <a href="#messages">随机文字气泡</a>
+      <a href="#modules">弹窗内容模块</a>
+      <a href="#sounds">音效自定义</a>
+      <a href="#plugins">应用与插件</a>
+      <a href="/">返回公共主页</a>
+    </nav>
+    <p>配置保存在你的账号中，并同步到登录的桌面挂件。</p>
+  </aside>
+
+  <main>
+    <section class="announcement-board" aria-label="公告板">
+      <div class="announcement-heading"><span>公告板</span><small id="announcement-time">所有人都可以阅读</small></div>
+      <p id="announcement-text">正在读取公告...</p>
+      <div class="release-actions" aria-label="安装与更新">
+        <a id="download-windows" href="#" target="_blank" rel="noopener">Windows x64 安装</a>
+        <button id="check-update" type="button">检查更新</button>
+        <small id="release-status">正在读取版本信息...</small>
+      </div>
+      <div id="project-references" class="project-references" aria-label="参考项目与素材出处"></div>
+      <details class="announcement-editor">
+        <summary>编辑公告</summary>
+        <textarea id="announcement-input" rows="3" maxlength="2000"></textarea>
+        <div class="announcement-actions"><input id="announcement-key" type="password" placeholder="请输入编辑密钥" autocomplete="off"><button id="save-announcement" class="primary">保存公告</button></div>
+      </details>
+    </section>
+    <header class="page-header">
+      <div><span class="eyebrow">PERSONALIZATION DASHBOARD</span><h1>让 Kimi 娘更像你的伙伴</h1><p>调整形象、声音、随机文字和弹窗内容。</p></div>
+      <a class="preview-link" href="/" target="_blank" rel="noopener">预览挂件 <span>↗</span></a>
+    </header>
+
+    <section id="auth-panel" class="card auth-panel">
+      <div class="section-heading"><span>账号</span><div><h2>登录后同步你的挂件</h2><p>每个账号的配置相互独立，密码仅用于本服务登录，不会显示在挂件或公告中。</p></div></div>
+      <form id="auth-form" class="auth-form">
+        <label><span>用户名</span><input id="auth-username" class="text-input" minlength="3" maxlength="24" autocomplete="username" required></label>
+        <label><span>密码（至少 10 位）</span><input id="auth-password" class="text-input" type="password" minlength="10" maxlength="128" autocomplete="current-password" required></label>
+        <div class="button-row"><button id="login-button" class="primary" type="submit">登录</button><button id="register-button" class="secondary" type="button">注册并登录</button></div>
+      </form>
+    </section>
+    <section id="account-panel" class="card account-panel" hidden><span>当前账号：<strong id="account-name"></strong>，挂件可使用同一账号登录同步。</span><button id="logout-button" class="secondary" type="button">退出登录</button></section>
+    <div id="personal-settings" hidden>
+
+    <section id="general" class="card">
+      <div class="section-heading"><span>01</span><div><h2>基础设置</h2><p>窗口、大小和内置音效</p></div></div>
+      <form id="general-form" class="form-grid">
+        <label class="wide range-field"><span>形象大小 <output id="scale-output">100%</output></span><input id="scale" type="range" min="0.75" max="1.35" step="0.05"></label>
+        <label><span>内置音效</span><select id="sound-set"><option value="chime">Kimi 风铃</option><option id="custom-option" value="custom" hidden disabled>自定义音效</option><option value="mute">静音</option></select></label>
+        <label class="range-field"><span>音量 <output id="volume-output">70%</output></span><input id="sound-volume" type="range" min="0" max="1" step="0.05"></label>
+        <label class="check"><input id="always-on-top" type="checkbox"><span>窗口置顶</span></label>
+        <label class="check"><input id="auto-start" type="checkbox"><span>开机自启</span></label>
+        <button class="primary wide-button" type="submit">保存基础设置</button>
+      </form>
+    </section>
+
+    <section id="mascot" class="card">
+      <div class="section-heading"><span>02</span><div><h2>形象自定义</h2><p>PNG 或 JPEG，最大 3 MB，推荐透明底方形立绘</p></div></div>
+      <div class="asset-editor">
+        <div class="mascot-preview"><img id="mascot-preview" src="/assets/kimi-nyan.png" alt="当前挂件形象"></div>
+        <div class="asset-actions">
+          <label class="file-button">选择新形象<input id="mascot-file" type="file" accept="image/png,image/jpeg" hidden></label>
+          <span id="mascot-file-name" class="file-name">尚未选择文件</span>
+          <div class="button-row"><button id="upload-mascot" class="primary">上传并应用</button><button id="reset-mascot" class="secondary">恢复原版</button></div>
+        </div>
+      </div>
+      <div class="state-asset-grid">
+        <div class="state-asset"><h3>工作状态形象</h3><img id="working-preview" src="/assets/working.png" alt="工作状态形象"><input id="working-file" type="file" accept="image/png,image/jpeg"><div class="button-row"><button id="upload-working" class="primary">上传工作形象</button><button id="reset-working" class="secondary">恢复默认</button></div></div>
+        <div class="state-asset"><h3>完成状态形象</h3><img id="completed-preview" src="/assets/completed.png" alt="完成状态形象"><input id="completed-file" type="file" accept="image/png,image/jpeg"><div class="button-row"><button id="upload-completed" class="primary">上传完成形象</button><button id="reset-completed" class="secondary">恢复默认</button></div></div>
+      </div>
+    </section>
+
+    <section id="messages" class="card">
+      <div class="section-heading"><span>03</span><div><h2>随机文字气泡</h2><p>每行一条，悬停形象时随机显示，最多 50 条</p></div></div>
+      <textarea id="bubble-messages" rows="8" spellcheck="false"></textarea>
+      <div class="special-text-grid">
+        <label><span>工作状态随机文字（每行一条）</span><textarea id="working-text" class="text-input" rows="3" maxlength="4000" placeholder="别吵，在思考..."></textarea></label>
+        <label><span>完成状态文字</span><input id="completed-text" class="text-input" maxlength="80" placeholder="完成..."></label>
+      </div>
+      <div class="button-row"><button id="save-messages" class="primary">保存随机文字</button><button id="restore-messages" class="secondary">恢复参考文案</button></div>
+    </section>
+
+    <section id="modules" class="card">
+      <div class="section-heading"><span>04</span><div><h2>弹窗内容模块</h2><p>选择用量气泡中显示的内容</p></div></div>
+      <div class="theme-grid" aria-label="弹窗版式">
+        <label class="theme-option"><input type="radio" name="bubble-theme" value="nebula"><span class="theme-preview nebula-preview"><i></i><i></i><i></i></span><span><strong>星云琉璃</strong><small>深蓝玻璃、月光与星空质感</small></span></label>
+        <label class="theme-option"><input type="radio" name="bubble-theme" value="compact"><span class="theme-preview compact-preview"><i></i><i></i><i></i></span><span><strong>紧凑</strong><small>更小、更轻盈的日常版式</small></span></label>
+        <label class="theme-option"><input type="radio" name="bubble-theme" value="classic"><span class="theme-preview classic-preview"><i></i><i></i><i></i></span><span><strong>经典</strong><small>保留完整信息的原始版式</small></span></label>
+        <label class="theme-option"><input type="radio" name="bubble-theme" value="minimal"><span class="theme-preview minimal-preview"><i></i><i></i></span><span><strong>极简</strong><small>只显示主要额度与套餐</small></span></label>
+      </div>
+      <div class="module-grid">
+        <label class="module-option"><input id="module-summary" type="checkbox"><span><strong>主用量圆环</strong><small>主要额度的剩余百分比</small></span></label>
+        <label class="module-option"><input id="module-reset" type="checkbox"><span><strong>重置时间</strong><small>主要额度的刷新时间</small></span></label>
+        <label class="module-option"><input id="module-apps" type="checkbox"><span><strong>应用启动入口</strong><small>打开 Kimi 与 Kimi Code</small></span></label>
+        <label class="module-option"><input id="module-source" type="checkbox"><span><strong>来源与同步</strong><small>官方实时状态和手动同步</small></span></label>
+      </div>
+      <button id="save-modules" class="primary">保存显示模块</button>
+    </section>
+
+    <section id="plugins" class="card">
+      <div class="section-heading"><span>05</span><div><h2>应用与插件</h2><p>自定义两个应用入口，并通过网址添加插件</p></div></div>
+      <div class="shortcut-grid">
+        <label><span>入口一名称</span><input id="shortcut-kimi-label" class="text-input" maxlength="30"></label>
+        <label><span>入口一网址（留空则打开 Kimi 应用）</span><input id="shortcut-kimi-url" class="text-input" placeholder="https://..."></label>
+        <label><span>入口一本地程序路径（优先于网址）</span><input id="shortcut-kimi-path" class="text-input" placeholder="D:\Apps\example.exe"></label>
+        <label><span>入口二名称</span><input id="shortcut-code-label" class="text-input" maxlength="30"></label>
+        <label><span>入口二网址（留空则打开 Kimi Code 应用）</span><input id="shortcut-code-url" class="text-input" placeholder="https://..."></label>
+        <label><span>入口二本地程序路径（优先于网址）</span><input id="shortcut-code-path" class="text-input" placeholder="D:\Apps\example.exe"></label>
+      </div>
+      <button id="save-shortcuts" class="primary">保存应用入口</button>
+      <div class="plugin-divider"></div>
+      <div class="plugin-add">
+        <input id="plugin-name" class="text-input" maxlength="40" placeholder="插件名称">
+        <input id="plugin-url" class="text-input" placeholder="https://example.com/plugin">
+        <button id="add-plugin" class="primary">添加插件</button>
+      </div>
+      <div id="plugin-list" class="plugin-list"></div>
+    </section>
+
+    <section id="sounds" class="card">
+      <div class="section-heading"><span>05</span><div><h2>音效自定义</h2><p>分别上传按下与松开的 MP3，单个文件最大 2 MB</p></div></div>
+      <div class="sound-grid">
+        <label><span>按下音效</span><input id="press-file" type="file" accept="audio/mpeg"></label>
+        <label><span>松开音效</span><input id="release-file" type="file" accept="audio/mpeg"></label>
+      </div>
+      <div class="button-row"><button id="upload-sounds" class="primary">上传并使用自定义音效</button><button id="reset-sounds" class="secondary">删除自定义音效</button></div>
+    </section>
+    </div>
+
+    <footer id="project-footer">公共账号配置中心 · Kimi Symphony Widget</footer>
+  </main>
+  <div id="toast" role="status"></div>
+  <script src="/config/app.js"></script>
+</body>
+</html>

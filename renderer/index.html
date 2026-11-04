@@ -13,7 +13,7 @@
     <section id="bubble" class="bubble" aria-label="订阅套餐用量">
       <div class="bubble-stars" aria-hidden="true">✦</div>
       <header class="card-header">
-        <div class="brand-mark" aria-hidden="true">K</div>
+        <div class="brand-mark" aria-hidden="true"><img src="../assets/kimi-nyan.png" alt=""></div>
         <div class="heading">
           <p id="plan-name">Kimi 订阅</p>
           <h1>订阅套餐用量</h1>
@@ -69,8 +69,14 @@
         <div><p>PERSONALIZATION</p><h2>挂件设置</h2></div>
         <button id="settings-close" class="icon-button" aria-label="关闭设置"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
       </header>
-      <p class="settings-help">用量会自动同步。形象、文案和更多个性化内容可前往本地配置网站调整。</p>
+      <p class="settings-help">用量会自动同步。登录公共账号后，个性化配置将在网站与挂件之间同步。</p>
       <form id="usage-form">
+        <div class="cloud-settings">
+          <span id="cloud-status">尚未登录公共账号</span>
+          <input id="cloud-username" class="text-input" placeholder="公共账号用户名" autocomplete="username">
+          <input id="cloud-password" class="text-input" type="password" placeholder="公共账号密码" autocomplete="current-password">
+          <div class="cloud-actions"><button id="cloud-login" type="button" class="primary-button">登录并同步</button><button id="cloud-sync" type="button" class="secondary-button">立即同步</button><button id="cloud-logout" type="button" class="text-button">退出账号</button></div>
+        </div>
         <label class="range-label"><span>挂件大小</span><output id="scale-output">100%</output><input id="scale-input" type="range" min="0.75" max="1.35" step="0.05" value="1"></label>
         <label>按压音效<select id="sound-set-input" class="sound-select"><option value="chime">Kimi 风铃</option><option id="custom-sound-option" value="custom" hidden disabled>自定义音效</option><option value="mute">静音</option></select></label>
         <label class="range-label"><span>音效音量</span><output id="sound-volume-output">70%</output><input id="sound-volume-input" type="range" min="0" max="1" step="0.05" value="0.7"></label>

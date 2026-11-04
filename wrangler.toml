@@ -1,0 +1,21 @@
+name = "app"
+account_id = "5e7d6b816f67e68c4312b138d6233e51"
+main = "cloudflare/worker.js"
+compatibility_date = "2026-11-04"
+workers_dev = true
+preview_urls = false
+
+[assets]
+directory = "cloudflare/public"
+
+[[durable_objects.bindings]]
+name = "ANNOUNCEMENT"
+class_name = "AnnouncementStore"
+
+[[durable_objects.bindings]]
+name = "ACCOUNTS"
+class_name = "AccountStore"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["AnnouncementStore", "AccountStore"]

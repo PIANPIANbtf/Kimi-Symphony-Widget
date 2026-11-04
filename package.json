@@ -1,6 +1,6 @@
 {
   "name": "kimi-symphony-widget",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "productName": "Kimi Symphony Widget",
   "description": "独立 Kimi 娘桌面挂件，显示官方订阅套餐用量并提供应用启动入口",
   "author": "偏翩",
@@ -18,14 +18,17 @@
     "start": "electron .",
     "web": "node server.mjs --open",
     "studio": "node server.mjs --open --studio",
+    "web:dev": "wrangler dev --local --port 8787",
+    "web:deploy": "wrangler deploy",
     "pack": "electron-builder --dir",
     "dist:win": "electron-builder --win portable --x64 && node scripts/generate-release-metadata.mjs win",
     "dist:mac": "electron-builder --mac zip --universal && node scripts/generate-release-metadata.mjs mac",
-    "check": "node --check main.cjs && node --check preload.cjs && node --check server.mjs && node --check lib/usage.mjs && node --check lib/kimi-usage.mjs && node --check lib/settings.mjs && node --check lib/startup.mjs && node --check lib/custom-assets.mjs && node --check lib/task-state.mjs && node --check lib/task-monitor.mjs && node --check lib/announcement.mjs && node --check lib/project.mjs && node --check lib/updater.mjs && node --check renderer/app.js && node --check config/app.js && node --check scripts/import-usage.mjs && node --check scripts/generate-release-metadata.mjs"
+    "check": "node --check main.cjs && node --check preload.cjs && node --check server.mjs && node --check lib/usage.mjs && node --check lib/kimi-usage.mjs && node --check lib/settings.mjs && node --check lib/startup.mjs && node --check lib/custom-assets.mjs && node --check lib/task-state.mjs && node --check lib/task-monitor.mjs && node --check lib/cloud-sync.mjs && node --check lib/announcement.mjs && node --check lib/project.mjs && node --check lib/updater.mjs && node --check renderer/app.js && node --check config/app.js && node --check cloudflare/worker.js && node --check cloudflare/account-store.js && node --check cloudflare/public/app.js && node --check cloudflare/public/config/app.js && node --check scripts/import-usage.mjs && node --check scripts/generate-release-metadata.mjs"
   },
   "devDependencies": {
     "electron": "^45.2.1",
-    "electron-builder": "^26.18.0"
+    "electron-builder": "^26.18.0",
+    "wrangler": "^4.157.0"
   },
   "license": "MIT"
 }

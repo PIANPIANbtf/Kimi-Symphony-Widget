@@ -26,6 +26,8 @@ let kimiUsageModule
 let startupModule
 let customAssetsModule
 let pathsModule
+let cloudSyncModule
+let cloudTimer = null
 let configWatcher = null
 let configTimer = null
 let mascotCenterY = null
@@ -74,6 +76,7 @@ async function getState() {
     completedImageUrl: custom.completed?.value || null,
     customSounds: custom.sounds ? { press: custom.sounds.press, release: custom.sounds.release } : null,
     taskState: taskMonitor?.snapshot() || { state: 'normal', activeCount: 0 },
+    cloud: await cloudSyncModule.cloudStatus(),
     layout: getLayout(),
     desktop: true,
   }
@@ -117,6 +120,12 @@ function watchConfig() {
   })
 }
 
+async function synchronizeCloud() {
+  const status = await cloudSyncModule.cloudSync()
+  mainWindow?.webContents.send('widget:cloud-status', status)
+  return status
+}
+
 async function createWindow() {
   const modules = await Promise.all([
     import('./lib/usage.mjs'),
@@ -126,6 +135,7 @@ async function createWindow() {
     import('./lib/custom-assets.mjs'),
     import('./lib/paths.mjs'),
     import('./lib/task-monitor.mjs'),
+    import('./lib/cloud-sync.mjs'),
   ])
   usageModule = modules[0]
   settingsModule = modules[1]
@@ -134,6 +144,7 @@ async function createWindow() {
   customAssetsModule = modules[4]
   pathsModule = modules[5]
   taskMonitor = new modules[6].TaskMonitor()
+  cloudSyncModule = modules[7]
   settings = await settingsModule.readSettings()
   await fs.promises.mkdir(pathsModule.dataDir, { recursive: true })
   try {
@@ -176,6 +187,7 @@ async function createWindow() {
   mainWindow.loadFile(path.join(__dirname, 'renderer', 'index.html'))
   mainWindow.on('closed', () => {
     clearTimeout(configTimer)
+    clearInterval(cloudTimer)
     configWatcher?.close()
     configWatcher = null
     taskMonitor?.stop()
@@ -190,7 +202,9 @@ async function createWindow() {
   })
   await taskMonitor.start()
   watchConfig()
-  import('./server.mjs').catch((error) => console.warn('配置网站启动失败:', error.message))
+  cloudTimer = setInterval(() => synchronizeCloud().catch(() => {}), 15000)
+  cloudTimer.unref()
+  synchronizeCloud().catch(() => {})
 }
 
 app.whenReady().then(createWindow)
@@ -265,22 +279,22 @@ ipcMain.handle('widget:update-settings', async (_event, patch) => {
   return { ...settings, layout: getLayout() }
 })
 
+ipcMain.handle('widget:cloud-login', async (_event, input) => {
+  const status = await cloudSyncModule.cloudLogin(input.username, input.password)
+  mainWindow?.webContents.send('widget:cloud-status', status)
+  return status
+})
+ipcMain.handle('widget:cloud-logout', async () => {
+  const status = await cloudSyncModule.cloudLogout()
+  mainWindow?.webContents.send('widget:cloud-status', status)
+  return status
+})
+ipcMain.handle('widget:cloud-status', () => cloudSyncModule.cloudStatus())
+ipcMain.handle('widget:cloud-sync', synchronizeCloud)
+
 ipcMain.handle('widget:open-studio', async () => {
-  const url = 'http://127.0.0.1:45739/config'
-  try {
-    const response = await fetch(url, { signal: AbortSignal.timeout(900) })
-    if (!response.ok) throw new Error('配置网站未就绪')
-    await shell.openExternal(url)
-  } catch {
-    const { spawn } = require('node:child_process')
-    const child = spawn(process.execPath, [path.join(__dirname, 'server.mjs'), '--open', '--studio'], {
-      env: { ...process.env, ELECTRON_RUN_AS_NODE: '1' },
-      detached: true,
-      stdio: 'ignore',
-      windowsHide: true,
-    })
-    child.unref()
-  }
+  const status = await cloudSyncModule.cloudStatus()
+  await shell.openExternal(`${status.server}/config`)
 })
 
 ipcMain.handle('widget:open-app', async (_event, id) => {
