@@ -247,9 +247,28 @@ function resetText(value) {
 function renderUsage() {
   const usage = state.usage
   if (!usage) return
-  const entries = Object.entries(usage.windows || {})
-  const primaryKey = usage.windows.fiveHour ? 'fiveHour' : usage.windows.monthly ? 'monthly' : 'weekly'
-  const primary = usage.windows[primaryKey]
+  const windows = usage.windows || {}
+  const primaryKey = windows.fiveHour ? 'fiveHour' : windows.monthly ? 'monthly' : 'weekly'
+  const primary = windows[primaryKey]
+  $('#usage-view').classList.toggle('empty', !primary)
+  $('#empty-usage').classList.toggle('hidden', Boolean(primary))
+  if (!primary) {
+    const noSubscription = usage.code === 'NO_SUBSCRIPTION'
+    const needsLogin = /凭据|登录/.test(usage.error || '')
+    $('#empty-title').textContent = noSubscription ? '未检测到订阅额度' : needsLogin ? '尚未连接 Kimi Code' : '暂时无法读取用量'
+    $('#empty-description').textContent = noSubscription
+      ? '当前账号没有可展示的订阅额度。若你已订阅，请在 Kimi Code 中重新登录后重试。'
+      : needsLogin
+        ? '请先在 Kimi Code 中登录，再点击“同步用量”。未登录时不会显示示例百分比。'
+        : '当前没有可显示的历史用量，请检查网络和 Kimi Code 登录状态后重试。'
+    elements.plan.textContent = 'Kimi 订阅'
+    elements.windows.replaceChildren()
+    elements.source.textContent = noSubscription ? '未订阅 · 没有额度数据' : needsLogin ? '未连接 · 没有用量数据' : '读取失败 · 没有历史数据'
+    elements.source.title = usage.error || '暂无可显示的用量'
+    updateLayout()
+    return
+  }
+  const entries = Object.entries(windows)
   elements.plan.textContent = `${usage.planName}${usage.isDemo ? ' · 演示' : ''}`
   elements.primaryRemaining.textContent = Math.round(primary.remainingPercent)
   elements.primaryLabel.textContent = primary.label || primaryKey
@@ -281,7 +300,7 @@ function renderUsage() {
   const sourceNames = { demo: '演示数据 · 尚未同步', official: '官方实时', manual: '手动同步', 'kimi-code': 'Kimi Code 同步', import: '文件导入', error: '快照读取异常' }
   const updated = usage.updatedAt ? ` · ${new Intl.DateTimeFormat('zh-CN', { hour: '2-digit', minute: '2-digit' }).format(new Date(usage.updatedAt))}` : ''
   elements.source.textContent = usage.error
-    ? (usage.stale ? '同步失败 · 保留上次数据' : '未连接 · 显示演示数据')
+    ? (usage.stale ? '同步失败 · 保留上次数据' : '未连接 · 暂无可显示用量')
     : `${sourceNames[usage.source] || '本地快照'}${updated}`
   elements.source.title = usage.error || (usage.isDemo ? '请在设置中填写官方 /usage 数值' : `快照时间：${usage.updatedAt}`)
   updateLayout()
@@ -387,36 +406,38 @@ function closeSettings() {
 
 let movePromise = null
 let moveDelta = null
+async function drainMoves() {
+  await new Promise(requestAnimationFrame)
+  while (moveDelta) {
+    const nextDelta = moveDelta
+    moveDelta = null
+    const previousBounds = state.layout?.bounds
+    try {
+      const next = await desktop.moveBy(nextDelta)
+      if (next && state.layout?.bounds) {
+        state.layout.bounds = { ...state.layout.bounds, ...next }
+        const appliedX = previousBounds ? next.x - previousBounds.x : nextDelta.x
+        const appliedY = previousBounds ? next.y - previousBounds.y : nextDelta.y
+        if (Number.isFinite(state.layout.mascotCenterY)) state.layout.mascotCenterY += appliedY
+        if (Number.isFinite(state.layout.mascotCenterX)) state.layout.mascotCenterX += appliedX
+        updateLayout()
+      }
+    } catch {}
+  }
+}
 function queueMove(delta) {
   moveDelta = moveDelta || { x: 0, y: 0 }
   moveDelta.x += delta.x
   moveDelta.y += delta.y
-  if (movePromise) return movePromise
-  movePromise = new Promise((resolve) => {
-    requestAnimationFrame(async () => {
-      const nextDelta = moveDelta
-      moveDelta = null
-      try {
-        const next = await desktop.moveBy(nextDelta)
-        if (next && state.layout?.bounds) {
-          state.layout.bounds = { ...state.layout.bounds, ...next }
-          if (Number.isFinite(state.layout.mascotCenterY)) state.layout.mascotCenterY += nextDelta.y
-          if (Number.isFinite(state.layout.mascotCenterX)) state.layout.mascotCenterX += nextDelta.x
-          updateLayout()
-        }
-        resolve(next)
-      } catch {
-        resolve(null)
-      } finally {
-        movePromise = null
-      }
-    })
-  })
+  if (!movePromise) movePromise = drainMoves().finally(() => { movePromise = null })
   return movePromise
 }
 
 async function flushMoves() {
-  while (movePromise) await movePromise
+  while (movePromise || moveDelta) {
+    const pending = movePromise || queueMove({ x: 0, y: 0 })
+    await pending
+  }
 }
 
 elements.mascot.addEventListener('pointerdown', async (event) => {

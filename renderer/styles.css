@@ -72,6 +72,10 @@ body.web #widget { right: 18px; bottom: 12px; }
 .eyebrow { color: #9ba6cb; font-size: 8px; letter-spacing: .12em; }
 .summary-copy h2 { margin: 5px 0 4px; font-size: 18px; }
 .summary-copy p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.5; }
+#usage-view.empty .summary, #usage-view.empty #window-list { display: none !important; }
+.empty-usage { margin: 17px 3px 13px; padding: 20px 16px; text-align: center; background: rgba(228,233,250,.43); border: 1px solid rgba(218,225,247,.7); border-radius: 14px; }
+.empty-usage strong { color: var(--ink); font-size: 16px; }
+.empty-usage p { margin: 9px 0 0; color: var(--muted); font-size: 11px; line-height: 1.7; }
 
 .window-list { display: grid; gap: 9px; padding: 11px 12px; background: rgba(228,233,250,.43); border: 1px solid rgba(218,225,247,.7); border-radius: 14px; }
 .window-row { display: grid; grid-template-columns: 1fr auto; gap: 5px 8px; align-items: center; }
@@ -112,16 +116,19 @@ body.web #widget { right: 18px; bottom: 12px; }
 .bubble[data-theme="nebula"] .heading p,
 .bubble[data-theme="nebula"] .summary-copy p,
 .bubble[data-theme="nebula"] .window-name,
+.bubble[data-theme="nebula"] .empty-usage p,
 .bubble[data-theme="nebula"] .card-footer { color: #adb5d7; }
 .bubble[data-theme="nebula"] .heading h1,
 .bubble[data-theme="nebula"] .summary-copy h2,
+.bubble[data-theme="nebula"] .empty-usage strong,
 .bubble[data-theme="nebula"] .special-summary h2 { color: #f5f3ff; }
 .bubble[data-theme="nebula"] .ring-track { stroke: rgba(191,199,239,.12); }
 .bubble[data-theme="nebula"] .ring-text strong,
 .bubble[data-theme="nebula"] .window-value { color: #edf0ff; }
 .bubble[data-theme="nebula"] .ring-text span,
 .bubble[data-theme="nebula"] .eyebrow { color: #c3c9ed; }
-.bubble[data-theme="nebula"] .window-list { background: rgba(135,149,219,.09); border-color: rgba(201,209,255,.12); }
+.bubble[data-theme="nebula"] .window-list,
+.bubble[data-theme="nebula"] .empty-usage { background: rgba(135,149,219,.09); border-color: rgba(201,209,255,.12); }
 .bubble[data-theme="nebula"] .progress { background: rgba(191,199,239,.12); }
 .bubble[data-theme="nebula"] .app-button { color: #dce4ff; background: rgba(148,165,232,.1); border-color: rgba(201,209,255,.15); }
 .bubble[data-theme="nebula"] .app-button:hover { color: #fff; background: rgba(148,165,232,.2); }
