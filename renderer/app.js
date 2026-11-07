@@ -418,8 +418,10 @@ async function drainMoves() {
         state.layout.bounds = { ...state.layout.bounds, ...next }
         const appliedX = previousBounds ? next.x - previousBounds.x : nextDelta.x
         const appliedY = previousBounds ? next.y - previousBounds.y : nextDelta.y
-        if (Number.isFinite(state.layout.mascotCenterY)) state.layout.mascotCenterY += appliedY
-        if (Number.isFinite(state.layout.mascotCenterX)) state.layout.mascotCenterX += appliedX
+        if (Number.isFinite(nextDelta.mascotCenterY)) state.layout.mascotCenterY = nextDelta.mascotCenterY
+        else if (Number.isFinite(state.layout.mascotCenterY)) state.layout.mascotCenterY += appliedY
+        if (Number.isFinite(nextDelta.mascotCenterX)) state.layout.mascotCenterX = nextDelta.mascotCenterX
+        else if (Number.isFinite(state.layout.mascotCenterX)) state.layout.mascotCenterX += appliedX
         updateLayout()
       }
     } catch {}
@@ -429,6 +431,8 @@ function queueMove(delta) {
   moveDelta = moveDelta || { x: 0, y: 0 }
   moveDelta.x += delta.x
   moveDelta.y += delta.y
+  if (Number.isFinite(delta.mascotCenterX)) moveDelta.mascotCenterX = delta.mascotCenterX
+  if (Number.isFinite(delta.mascotCenterY)) moveDelta.mascotCenterY = delta.mascotCenterY
   if (!movePromise) movePromise = drainMoves().finally(() => { movePromise = null })
   return movePromise
 }
@@ -449,6 +453,7 @@ elements.mascot.addEventListener('pointerdown', async (event) => {
   playSound('press')
   const rect = elements.widget.getBoundingClientRect()
   const mascotRect = elements.mascot.getBoundingClientRect()
+  let centerOffset = null
   if (desktop) {
     if (!state.layout) state.layout = await desktop.getLayout()
     const { bounds } = state.layout
@@ -456,6 +461,7 @@ elements.mascot.addEventListener('pointerdown', async (event) => {
       x: bounds.x + mascotRect.left + mascotRect.width / 2,
       y: bounds.y + mascotRect.top + mascotRect.height / 2,
     }
+    centerOffset = { x: center.x - event.screenX, y: center.y - event.screenY }
     state.layout.mascotCenterX = center.x
     state.layout.mascotCenterY = center.y
     desktop.setMascotCenter(center)
@@ -469,6 +475,7 @@ elements.mascot.addEventListener('pointerdown', async (event) => {
     lastY: event.screenY,
     left: rect.left,
     top: rect.top,
+    centerOffset,
     moved: false,
   }
   if (desktop) desktop.setInteractive(true)
@@ -481,7 +488,12 @@ elements.mascot.addEventListener('pointermove', (event) => {
   if (dx * dx + dy * dy > 9) drag.moved = true
   if (!drag.moved) return
   if (desktop) {
-    queueMove({ x: event.screenX - drag.lastX, y: event.screenY - drag.lastY })
+    queueMove({
+      x: event.screenX - drag.lastX,
+      y: event.screenY - drag.lastY,
+      mascotCenterX: drag.centerOffset ? event.screenX + drag.centerOffset.x : undefined,
+      mascotCenterY: drag.centerOffset ? event.screenY + drag.centerOffset.y : undefined,
+    })
   } else {
     elements.widget.style.right = 'auto'
     elements.widget.style.bottom = 'auto'
