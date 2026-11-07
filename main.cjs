@@ -233,10 +233,8 @@ ipcMain.handle('widget:move-by', (_event, delta) => {
   const maxY = Math.max(minY, area.y + area.height - bounds.height)
   next.x = Math.max(minX, Math.min(next.x, maxX))
   next.y = Math.max(minY, Math.min(next.y, maxY))
-  if (Number.isFinite(delta.mascotCenterY)) mascotCenterY = delta.mascotCenterY
-  else if (mascotCenterY !== null) mascotCenterY += delta.y
-  if (Number.isFinite(delta.mascotCenterX)) mascotCenterX = delta.mascotCenterX
-  else if (mascotCenterX !== null) mascotCenterX += delta.x
+  if (mascotCenterY !== null) mascotCenterY += delta.y
+  if (mascotCenterX !== null) mascotCenterX += delta.x
   mainWindow.setPosition(next.x, next.y)
   return next
 })
